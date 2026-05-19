@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<body>
+    <canvas id="canvas" width="800" height="800"></canvas>
+    <script>
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+
+        // Background
+        ctx.fillStyle = '#f8f9fa';
+        ctx.fillRect(0, 0, 800, 800);
+
+        // Border
+        ctx.strokeStyle = '#dee2e6';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(15, 15, 770, 770);
+
+        // Shopping cart icon
+        ctx.fillStyle = '#adb5bd';
+        ctx.font = '120px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('🛒', 400, 320);
+
+        // Text
+        ctx.fillStyle = '#6c757d';
+        ctx.font = 'bold 36px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('FreshCart', 400, 450);
+
+        ctx.font = '24px Arial';
+        ctx.fillText('No Image Available', 400, 500);
+
+        // Download
+        var link = document.createElement('a');
+        link.download = 'placeholder.jpg';
+        link.href = canvas.toDataURL('image/jpeg', 0.9);
+        link.textContent = 'Download placeholder.jpg';
+        link.style.cssText = 'display:block; font-size:20px; margin-top:20px;';
+        document.body.appendChild(link);
+    </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+﻿@model List<FreshCart.Web.Models.Entities.User>
+
+@{
+    ViewData["Title"] = "Manage Users";
+    var currentRole = ViewBag.CurrentRole as string ?? "All";
+    var search = ViewBag.Search as string;
+}
+
+<div class="row">
+    <div class="col-md-3">
+        @await Html.PartialAsync("_AdminSidebar")
+    </div>
+    <div class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>👥 Users</h2>
+            <a href="/Admin/CreateUser" class="btn btn-success">+ Add User</a>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <form method="get" action="/Admin/Users" class="row g-3">
+                    <input type="hidden" name="role" value="@currentRole" />
+                    <div class="col-md-10">
+                        <input type="text" name="search" class="form-control"
+                               placeholder="Search by username, full name, or email..."
+                               value="@search" />
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-success w-100">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Role Filters -->
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <div class="d-flex gap-2">
+                    @foreach (var role in new[] { "All", "Admin", "Staff", "Customer" })
+                    {
+                        <a href="/Admin/Users?role=@role&search=@search"
+                           class="btn btn-sm @(currentRole == role ? "btn-success" : "btn-outline-success")">
+                            @role
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                @foreach (var user in Model)
+                                {
+                                    <tr>
+                                        <td>@user.Username</td>
+                                        <td>@user.FullName</td>
+                                        <td>@user.Email</td>
+                                        <td>
+                                            @{
+                                                var roleClass = user.Role switch
+                                                {
+                                                    "Admin" => "bg-danger",
+                                                    "Staff" => "bg-warning text-dark",
+                                                    _ => "bg-info"
+                                                };
+                                            }
+                                            <span class="badge @roleClass">@user.Role</span>
+                                        </td>
+                                        <td>
+                                            @if (user.IsActive)
+                                            {
+                                                <span class="badge bg-success">Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">Inactive</span>
+                                            }
+                                        </td>
+                                        <td>@user.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                        <td>
+                                            <a href="/Admin/EditUser/@user.UserId"
+                                               class="btn btn-sm btn-warning">Edit</a>
+                                            @if (user.IsActive)
+                                            {
+                                                @if (user.UserId.ToString() != Context.Session.GetString("UserId"))
+                                                {
+                                                    <form method="post" action="/Admin/DeleteUser"
+                                                          style="display:inline;"
+                                                          onsubmit="return confirm('Are you sure you want to deactivate this user?');">
+                                                        <input type="hidden" name="id" value="@user.UserId" />
+                                                        <button type="submit" class="btn btn-sm btn-danger">Deactivate</button>
+                                                    </form>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">Current User</span>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <form method="post" action="/Admin/ReactivateUser"
+                                                      style="display:inline;"
+                                                      onsubmit="return confirm('Reactivate this user?');">
+                                                    <input type="hidden" name="id" value="@user.UserId" />
+                                                    <button type="submit" class="btn btn-sm btn-success">Reactivate</button>
+                                                </form>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center">No users found</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,122 @@
+﻿@model List<FreshCart.Web.Models.Entities.Product>
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Manage Products";
+    var categories = ViewBag.Categories as SelectList;
+    var search = ViewBag.Search as string;
+}
+
+<div class="row">
+    <div class="col-md-3">
+        @await Html.PartialAsync("_AdminSidebar")
+    </div>
+    <div class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>📦 Products</h2>
+            <a href="/Admin/CreateProduct" class="btn btn-success">+ Add Product</a>
+        </div>
+
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <form method="get" action="/Admin/Products" class="row g-3">
+                    <div class="col-md-6">
+                        <input type="text" name="search" class="form-control"
+                               placeholder="Search products..." value="@search" />
+                    </div>
+                    <div class="col-md-4">
+                        <select name="categoryId" class="form-select" asp-items="categories">
+                            <option value="">All Categories</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-success w-100">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                @foreach (var product in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @{
+                                                var imageSrc = !string.IsNullOrEmpty(product.ImageUrl) && (product.ImageUrl.StartsWith("http://") || product.ImageUrl.StartsWith("https://"))
+                                                ? product.ImageUrl
+                                                : "/images/products/" + (product.ImageUrl ?? "placeholder.jpg");
+                                            }
+                                            <img src="@imageSrc"
+                                                 alt="@product.Name"
+                                                 onerror="this.onerror=null; this.src='/images/products/placeholder.jpg';"
+                                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;" />
+                                        </td>
+                                        <td>@product.Name</td>
+                                        <td>@product.Category?.Name</td>
+                                        <td>₱@product.Price.ToString("N2")</td>
+                                        <td>
+                                            @if (product.StockQuantity <= 10)
+                                            {
+                                                <span class="badge bg-warning">@product.StockQuantity</span>
+                                            }
+                                            else
+                                            {
+                                                @product.StockQuantity
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (product.IsActive)
+                                            {
+                                                <span class="badge bg-success">Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">Inactive</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <a href="/Admin/EditProduct/@product.ProductId"
+                                               class="btn btn-sm btn-warning">Edit</a>
+                                            @if (product.IsActive)
+                                            {
+                                                <form method="post" action="/Admin/DeleteProduct"
+                                                      style="display:inline;"
+                                                      onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                                    <input type="hidden" name="id" value="@product.ProductId" />
+                                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                                </form>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center">No products found</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

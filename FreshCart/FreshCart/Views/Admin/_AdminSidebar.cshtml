@@ -1,0 +1,44 @@
+﻿@{
+    var controller = ViewContext.RouteData.Values["Controller"]?.ToString();
+    var action = ViewContext.RouteData.Values["Action"]?.ToString();
+    var role = Context.Session.GetString("Role");
+}
+
+<div class="admin-sidebar">
+    <h5 class="mb-3">Admin Menu</h5>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link @(controller == "Admin" && action == "Dashboard" ? "active" : "")"
+               href="/Admin/Dashboard">
+                📊 Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(controller == "Admin" && action == "Products" ? "active" : "")"
+               href="/Admin/Products">
+                📦 Products
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(controller == "Admin" && action == "Orders" ? "active" : "")"
+               href="/Admin/Orders">
+                📋 Orders
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(controller == "Admin" && action == "Categories" ? "active" : "")"
+               href="/Admin/Categories">
+                🏷️ Categories
+            </a>
+        </li>
+        @if (role == "Admin")
+        {
+            <li class="nav-item">
+                <a class="nav-link @(controller == "Admin" && action == "Users" ? "active" : "")"
+                   href="/Admin/Users">
+                    👥 Users
+                </a>
+            </li>
+        }
+    </ul>
+</div>

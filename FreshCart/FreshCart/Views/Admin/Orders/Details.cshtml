@@ -1,0 +1,111 @@
+﻿@model FreshCart.Web.Models.Entities.Order
+
+@{
+    ViewData["Title"] = $"Order #{Model.OrderNumber}";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        @await Html.PartialAsync("_AdminSidebar")
+    </div>
+    <div class="col-md-9">
+        <h2 class="mb-4">📄 Order #@Model.OrderNumber</h2>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">Order Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <strong>Customer:</strong> @Model.User?.FullName<br />
+                                <strong>Email:</strong> @Model.User?.Email<br />
+                                <strong>Date:</strong> @Model.OrderDate.ToString("MMMM dd, yyyy HH:mm")
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Payment:</strong> @Model.PaymentMethod<br />
+                                <strong>Total:</strong> <span class="text-success">₱@Model.TotalAmount.ToString("N2")</span><br />
+                                <strong>Status:</strong>
+                                @{
+                                    var statusClass = Model.Status switch
+                                    {
+                                        "Pending" => "bg-warning",
+                                        "Packing" => "bg-info",
+                                        "ToDeliver" => "bg-primary",
+                                        "ToReceive" => "bg-primary",
+                                        "Delivered" => "bg-success",
+                                        "Received" => "bg-secondary",
+                                        _ => "bg-light text-dark"
+                                    };
+                                }
+                                <span class="badge @statusClass">@Model.Status</span>
+                            </div>
+                        </div>
+
+                        <h6>Shipping Address:</h6>
+                        <p class="border p-2 rounded bg-light">@Model.ShippingAddress</p>
+
+                        <h6>Items:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Price</th>
+                                        <th>Qty</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.OrderDetails != null)
+                                    {
+                                        @foreach (var detail in Model.OrderDetails)
+                                        {
+                                            <tr>
+                                                <td>@detail.Product?.Name</td>
+                                                <td>₱@detail.UnitPrice.ToString("N2")</td>
+                                                <td>@detail.Quantity</td>
+                                                <td>₱@((detail.UnitPrice * detail.Quantity).ToString("N2"))</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Update Status</h5>
+                        <form method="post" action="/Admin/UpdateOrderStatus">
+                            <input type="hidden" name="orderId" value="@Model.OrderId" />
+                            <div class="mb-3">
+                                <select name="newStatus" class="form-select">
+                                    @{
+                                        var allStatuses = new[] { "Pending", "Packing", "ToDeliver", "ToReceive", "Delivered"};
+                                    }
+                                    @foreach (var status in allStatuses)
+                                    {
+                                        <option value="@status" selected="@(Model.Status == status ? "selected" : null)">
+                                            @status
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">Update Status</button>
+                        </form>
+                    </div>
+                </div>
+
+                <a href="/Admin/Orders" class="btn btn-outline-secondary w-100">
+                    Back to Orders
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

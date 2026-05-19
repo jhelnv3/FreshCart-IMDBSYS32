@@ -1,0 +1,69 @@
+﻿@model FreshCart.Web.Models.ViewModels.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        @await Html.PartialAsync("_AdminSidebar")
+    </div>
+    <div class="col-md-9">
+        <h2 class="mb-4">📊 Dashboard</h2>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="card bg-primary text-white shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-title">Total Products</h6>
+                        <h2>@Model.TotalProducts</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card bg-success text-white shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-title">Total Orders</h6>
+                        <h2>@Model.TotalOrders</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card bg-info text-white shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-title">Total Users</h6>
+                        <h2>@Model.TotalUsers</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="card bg-warning text-dark shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-title">Pending Orders</h6>
+                        <h2>@Model.PendingOrders</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card bg-danger text-white shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-title">Low Stock Products</h6>
+                        <h2>@Model.LowStockProducts</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card bg-dark text-white shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-title">Total Revenue</h6>
+                        <h2>₱@Model.TotalRevenue.ToString("N2")</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

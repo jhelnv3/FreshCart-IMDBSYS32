@@ -1,0 +1,116 @@
+﻿@model FreshCart.Web.Models.ViewModels.CheckoutViewModel
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h2 class="mb-4">📦 Checkout</h2>
+
+@if (Model.Cart?.Items != null && Model.Cart.Items.Any())
+{
+    <form method="post" action="/Cart/PlaceOrder">
+        <div class="row">
+            <div class="col-md-8">
+                <!-- Shipping Address -->
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Shipping Address</h5>
+                        <div class="mb-3">
+                            <label asp-for="ShippingAddress" class="form-label">Delivery Address</label>
+                            <textarea asp-for="ShippingAddress" class="form-control" rows="3"
+                                      placeholder="Enter your complete delivery address"></textarea>
+                            <span asp-validation-for="ShippingAddress" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Method -->
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Payment Method</h5>
+                        <div class="mb-3">
+                            <select asp-for="PaymentMethod" class="form-select">
+                                <option value="COD">Cash on Delivery (COD)</option>
+                                <option value="OnlinePayment">Online Payment</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Items -->
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Order Items</h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Qty</th>
+                                        <th>Price</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Cart.Items)
+                                    {
+                                        <tr>
+                                            <td>@item.ProductName</td>
+                                            <td>@item.Quantity</td>
+                                            <td>₱@item.UnitPrice.ToString("N2")</td>
+                                            <td>₱@item.Subtotal.ToString("N2")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body checkout-summary">
+                        <h5 class="card-title">Order Summary</h5>
+                        <hr />
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal</span>
+                            <span>₱@Model.Cart.Subtotal.ToString("N2")</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Delivery Fee</span>
+                            <span>₱@Model.Cart.DeliveryFee.ToString("N2")</span>
+                        </div>
+                        <hr />
+                        <div class="d-flex justify-content-between mb-3">
+                            <strong>Total</strong>
+                            <strong class="text-success">₱@Model.Cart.Total.ToString("N2")</strong>
+                        </div>
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <button type="submit" class="btn btn-success w-100 btn-lg">
+                            Place Order
+                        </button>
+                        <a href="/Cart" class="btn btn-outline-secondary w-100 mt-2">
+                            Back to Cart
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}
+else
+{
+    <div class="text-center py-5">
+        <h3>Your cart is empty</h3>
+        <a href="/Product" class="btn btn-success">Go Shopping</a>
+    </div>
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,237 @@
+﻿/* FreshCart Custom Styles */
+:root {
+    --fresh-green: #198754;
+    --fresh-green-dark: #145c38;
+    --fresh-orange: #fd7e14;
+    --fresh-orange-dark: #e06a00;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f9fa;
+}
+
+main {
+    flex: 1;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.card {
+    border-radius: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+.product-card {
+    height: 100%;
+}
+
+    .product-card .card-img-top {
+        width: 100%;
+        aspect-ratio: 1 / 1; /* Forces square shape */
+        object-fit: cover; /* Crops to fill without distortion */
+        background-color: #f8f9fa;
+    }
+
+    .product-card .price {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: var(--fresh-green);
+    }
+
+    .product-card .stock-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .product-img-container {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+        background-color: #f8f9fa;
+    }
+
+    .product-img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.badge-low-stock {
+    background-color: #dc3545;
+}
+
+.badge-in-stock {
+    background-color: #198754;
+}
+
+.footer {
+    background-color: var(--fresh-green);
+    color: white;
+    padding: 1.5rem 0;
+    margin-top: 3rem;
+}
+
+    .footer a {
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+    }
+
+        .footer a:hover {
+            color: white;
+        }
+
+.btn-primary {
+    background-color: var(--fresh-green);
+    border-color: var(--fresh-green);
+}
+
+    .btn-primary:hover {
+        background-color: var(--fresh-green-dark);
+        border-color: var(--fresh-green-dark);
+    }
+
+.btn-outline-primary {
+    color: var(--fresh-green);
+    border-color: var(--fresh-green);
+}
+
+    .btn-outline-primary:hover {
+        background-color: var(--fresh-green);
+        border-color: var(--fresh-green);
+    }
+
+.btn-warning {
+    background-color: var(--fresh-orange);
+    border-color: var(--fresh-orange);
+    color: white;
+}
+
+    .btn-warning:hover {
+        background-color: var(--fresh-orange-dark);
+        border-color: var(--fresh-orange-dark);
+        color: white;
+    }
+
+.status-badge {
+    font-size: 0.85rem;
+    padding: 0.35em 0.65em;
+}
+
+.table th {
+    background-color: var(--fresh-green);
+    color: white;
+}
+
+.search-box {
+    border-radius: 25px;
+    padding-left: 20px;
+}
+
+.cart-quantity {
+    width: 60px;
+    text-align: center;
+}
+
+.checkout-summary {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 1.5rem;
+}
+
+.admin-sidebar {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+    .admin-sidebar .nav-link {
+        color: #333;
+        border-radius: 5px;
+        margin-bottom: 2px;
+    }
+
+        .admin-sidebar .nav-link:hover,
+        .admin-sidebar .nav-link.active {
+            background-color: var(--fresh-green);
+            color: white;
+        }
+
+.hero-section {
+    background: linear-gradient(135deg, #198754 0%, #28a745 100%);
+    color: white;
+    padding: 3rem 0;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+
+.category-pill {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    background-color: #e9ecef;
+    color: #333;
+    text-decoration: none;
+    margin: 0.25rem;
+    transition: background-color 0.2s;
+}
+
+    .category-pill:hover {
+        background-color: var(--fresh-green);
+        color: white;
+    }
+
+    .category-pill.active {
+        background-color: var(--fresh-green);
+        color: white;
+    }
+
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 1.5rem 0;
+    }
+
+    .product-card .card-img-top {
+        height: 150px;
+    }
+}
+
+/* Broken image placeholder */
+.img-placeholder {
+    width: 100%;
+    height: 200px;
+    background-color: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 14px;
+    position: relative;
+    overflow: hidden;
+}
+
+    .img-placeholder::before {
+        content: "📷";
+        font-size: 48px;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .img-placeholder::after {
+        content: "No Image Available";
+        display: block;
+        position: absolute;
+        bottom: 20px;
+        font-size: 14px;
+    }

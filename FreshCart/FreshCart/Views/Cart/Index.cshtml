@@ -1,0 +1,102 @@
+﻿@model FreshCart.Web.Models.ViewModels.CartViewModel
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+<h2 class="mb-4">🛒 Your Shopping Cart</h2>
+
+@if (Model.Items != null && Model.Items.Any())
+{
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Subtotal</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                @{
+                                                    var imageSrc = !string.IsNullOrEmpty(item.ImageUrl) && (item.ImageUrl.StartsWith("http://") || item.ImageUrl.StartsWith("https://"))
+                                                    ? item.ImageUrl
+                                                    : "/images/products/" + (item.ImageUrl ?? "placeholder.jpg");
+                                                }
+                                                <img src="@imageSrc"
+                                                     alt="@item.ProductName"
+                                                     onerror="this.onerror=null; this.src='/images/products/placeholder.jpg';"
+                                                     style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;" />
+                                                <div>
+                                                    <h6 class="mb-0">@item.ProductName</h6>
+                                                    <small class="text-muted">Stock: @item.AvailableStock</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>₱@item.UnitPrice.ToString("N2")</td>
+                                        <td>@item.Quantity</td>
+                                        <td>₱@item.Subtotal.ToString("N2")</td>
+                                        <td>
+                                            <form method="post" action="/Cart/Remove">
+                                                <input type="hidden" name="id" value="@item.CartItemId" />
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    Remove
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body checkout-summary">
+                    <h5 class="card-title">Order Summary</h5>
+                    <hr />
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <span>₱@Model.Subtotal.ToString("N2")</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Delivery Fee</span>
+                        <span>₱@Model.DeliveryFee.ToString("N2")</span>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between mb-3">
+                        <strong>Total</strong>
+                        <strong class="text-success">₱@Model.Total.ToString("N2")</strong>
+                    </div>
+                    <a href="/Cart/Checkout" class="btn btn-success w-100 btn-lg">
+                        Proceed to Checkout
+                    </a>
+                    <a href="/Product" class="btn btn-outline-secondary w-100 mt-2">
+                        Continue Shopping
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="text-center py-5">
+        <h3>Your cart is empty</h3>
+        <p>Looks like you haven't added any items yet.</p>
+        <a href="/Product" class="btn btn-success btn-lg mt-3">Start Shopping</a>
+    </div>
+}

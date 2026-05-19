@@ -1,0 +1,69 @@
+﻿@model List<FreshCart.Web.Models.Entities.Product>
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="hero-section text-center">
+    <h1 class="display-4">🛒 Welcome to FreshCart</h1>
+    <p class="lead">Your online grocery store - Fresh produce delivered to your doorstep!</p>
+    @if (Context.Session.GetString("UserId") == null)
+    {
+        <div class="mt-4">
+            <a href="/Account/Login" class="btn btn-light btn-lg me-2">Login</a>
+            <a href="/Account/Register" class="btn btn-outline-light btn-lg">Register</a>
+        </div>
+    }
+    else
+    {
+        <a href="/Product" class="btn btn-light btn-lg mt-4">Shop Now</a>
+    }
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <h3 class="mb-3">Featured Products</h3>
+    <div class="row">
+        @foreach (var product in Model)
+        {
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card product-card h-100 shadow-sm">
+                    <div class="position-relative">
+                        @{
+                            var imageSrc = !string.IsNullOrEmpty(product.ImageUrl) && (product.ImageUrl.StartsWith("http://") || product.ImageUrl.StartsWith("https://"))
+                            ? product.ImageUrl
+                            : "/images/products/" + (product.ImageUrl ?? "placeholder.jpg");
+                        }
+                        <img src="@imageSrc"
+                             class="card-img-top"
+                             alt="@product.Name"
+                             onerror="this.onerror=null; this.src='/images/products/placeholder.jpg';" />
+                        <span class="badge @(product.StockQuantity > 10 ? "bg-success" : "bg-danger") position-absolute top-0 end-0 m-2">
+                            @(product.StockQuantity > 10 ? "In Stock" : "Low Stock")
+                        </span>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-title">@product.Name</h6>
+                        <p class="card-text small text-muted flex-grow-1">
+                            @(product.Description?.Length > 60 ? product.Description.Substring(0, 60) + "..." : product.Description)
+                        </p>
+                        <div class="mt-auto">
+                            <div class="price mb-2">₱@product.Price.ToString("N2")</div>
+                            <a href="/Product/Details/@product.ProductId" class="btn btn-outline-success btn-sm w-100">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="text-center mt-3">
+        <a href="/Product" class="btn btn-success">View All Products</a>
+    </div>
+}
+else
+{
+    <div class="text-center py-5">
+        <h3>No products available</h3>
+        <p>Check back later for fresh products!</p>
+    </div>
+}

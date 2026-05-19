@@ -1,0 +1,100 @@
+﻿@model FreshCart.Web.Models.Entities.Product
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/Product">Products</a></li>
+        <li class="breadcrumb-item"><a href="/Product?categoryId=@Model.CategoryId">@Model.Category?.Name</a></li>
+        <li class="breadcrumb-item active">@Model.Name</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            @{
+                var imageSrc = !string.IsNullOrEmpty(Model.ImageUrl) && (Model.ImageUrl.StartsWith("http://") || Model.ImageUrl.StartsWith("https://"))
+                ? Model.ImageUrl
+                : "/images/products/" + (Model.ImageUrl ?? "placeholder.jpg");
+            }
+            <img src="@imageSrc"
+                 class="card-img-top"
+                 alt="@Model.Name"
+                 onerror="this.onerror=null; this.src='/images/products/placeholder.jpg';"
+                 style="height: 400px; object-fit: cover;" />
+        </div>
+    </div>
+    <div class="col-md-7">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <span class="badge bg-light text-dark mb-2">@Model.Category?.Name</span>
+                <h1 class="card-title">@Model.Name</h1>
+                <h3 class="text-success mb-3">₱@Model.Price.ToString("N2")</h3>
+
+                <div class="mb-3">
+                    <h6>Description:</h6>
+                    <p>@Model.Description</p>
+                </div>
+
+                <div class="mb-3">
+                    <h6>Availability:</h6>
+                    @if (Model.StockQuantity > 10)
+                    {
+                        <span class="badge bg-success">In Stock (@Model.StockQuantity available)</span>
+                    }
+                    else if (Model.StockQuantity > 0)
+                    {
+                        <span class="badge bg-warning">Low Stock (Only @Model.StockQuantity left)</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Out of Stock</span>
+                    }
+                </div>
+
+                @if (Model.StockQuantity > 0 && Context.Session.GetString("UserId") != null)
+                {
+                    <form method="post" action="/Product/AddToCart" class="row g-3 align-items-end">
+                        <input type="hidden" name="productId" value="@Model.ProductId" />
+                        <div class="col-auto">
+                            <label for="quantity" class="form-label">Quantity:</label>
+                            <input type="number" name="quantity" id="quantity"
+                                   class="form-control" value="1" min="1" max="@Model.StockQuantity"
+                                   style="width: 80px;" />
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                🛒 Add to Cart
+                            </button>
+                        </div>
+                    </form>
+                }
+                else if (Context.Session.GetString("UserId") == null)
+                {
+                    <div class="alert alert-info">
+                        Please <a href="/Account/Login">login</a> to add items to your cart.
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        This product is currently out of stock.
+                    </div>
+                }
+
+                <hr />
+                <small class="text-muted">
+                    Last updated: @Model.UpdatedAt.ToString("MMMM dd, yyyy")
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a href="/Product" class="btn btn-outline-secondary">← Back to Products</a>
+</div>

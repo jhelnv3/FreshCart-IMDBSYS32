@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Verify Code";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-4">Verify Reset Code</h2>
+
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-info">
+                        @TempData["Success"]
+                    </div>
+                }
+
+                <form asp-action="VerifyCode" method="post">
+                    <div class="mb-3">
+                        <label for="code" class="form-label">Enter 6-digit code</label>
+                        <input type="text" name="code" id="code" class="form-control"
+                               placeholder="XXXXXX" maxlength="6" required />
+                    </div>
+
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-success">Verify Code</button>
+                    </div>
+
+                    <div class="text-center">
+                        <a asp-action="ForgotPassword">Request New Code</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

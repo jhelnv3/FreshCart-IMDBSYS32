@@ -1,0 +1,116 @@
+﻿@model FreshCart.Web.Models.ViewModels.EditUserViewModel
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Edit User";
+    var roles = ViewBag.Roles as SelectList;
+}
+
+<div class="row">
+    <div class="col-md-3">
+        @await Html.PartialAsync("_AdminSidebar")
+    </div>
+    <div class="col-md-9">
+        <h2 class="mb-4">✏️ Edit User</h2>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form asp-action="EditUser" asp-route-id="@Model.UserId" method="post" id="editUserForm">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Username" class="form-label">Username</label>
+                            <input asp-for="Username" class="form-control" />
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="FullName" class="form-label">Full Name</label>
+                            <input asp-for="FullName" class="form-control" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Email</label>
+                        <input asp-for="Email" class="form-control" type="email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Role" class="form-label">Role</label>
+                        <select asp-for="Role" class="form-select" asp-items="roles">
+                            <option value="">Select Role</option>
+                        </select>
+                        <span asp-validation-for="Role" class="text-danger"></span>
+                    </div>
+
+                    <hr />
+                    <h6 class="text-muted">Change Password (leave blank to keep current)</h6>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="Password" class="form-label">New Password</label>
+                            <input type="password" name="Password" id="Password" class="form-control"
+                                   placeholder="Leave blank to keep current" />
+                            <span class="text-danger" id="passwordError"></span>
+                            <small class="text-muted">Minimum 6 characters</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="ConfirmPassword" class="form-label">Confirm New Password</label>
+                            <input type="password" name="ConfirmPassword" id="ConfirmPassword" class="form-control"
+                                   placeholder="Re-enter new password" />
+                            <span class="text-danger" id="confirmPasswordError"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">Update User</button>
+                        <a href="/Admin/Users" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Override form submission to skip password validation when empty
+        document.getElementById('editUserForm').addEventListener('submit', function(e) {
+            var password = document.getElementById('Password').value;
+            var confirmPassword = document.getElementById('ConfirmPassword').value;
+            var passwordError = document.getElementById('passwordError');
+            var confirmPasswordError = document.getElementById('confirmPasswordError');
+
+            // Clear previous errors
+            passwordError.textContent = '';
+            confirmPasswordError.textContent = '';
+
+            // If both password fields are empty, that's fine - skip validation
+            if (password === '' && confirmPassword === '') {
+                return true; // Allow form submission
+            }
+
+            // If password is provided, validate it
+            if (password !== '' && password.length < 6) {
+                passwordError.textContent = 'Password must be at least 6 characters.';
+                e.preventDefault();
+                return false;
+            }
+
+            // Check passwords match
+            if (password !== confirmPassword) {
+                confirmPasswordError.textContent = 'Passwords do not match.';
+                e.preventDefault();
+                return false;
+            }
+
+            return true;
+        });
+    </script>
+}

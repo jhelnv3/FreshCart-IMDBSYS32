@@ -1,0 +1,82 @@
+﻿@model FreshCart.Web.Models.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-4">
+                    <span style="font-size: 2rem;">🛒</span>
+                    <br />FreshCart Login
+                </h2>
+
+                <form asp-action="Login" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Username" class="form-label">Username</label>
+                        <input asp-for="Username" class="form-control" placeholder="Enter your username" />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">Password</label>
+                        <input asp-for="Password" class="form-control" placeholder="Enter your password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-success btn-lg">Login</button>
+                    </div>
+
+                    <div class="text-center">
+                        <a asp-action="ForgotPassword" class="text-decoration-none">Forgot Password?</a>
+                        <span class="mx-2">|</span>
+                        <a asp-action="Register" class="text-decoration-none">Create Account</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-3 shadow-sm">
+            <div class="card-body">
+                <h6 class="text-muted">Demo Credentials:</h6>
+                <table class="table table-sm table-bordered mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Role</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge bg-danger">Admin</span></td>
+                            <td>admin</td>
+                            <td>Admin@123</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge bg-warning">Staff</span></td>
+                            <td>staff</td>
+                            <td>staff123</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge bg-info">Customer</span></td>
+                            <td>user</td>
+                            <td>user123</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
