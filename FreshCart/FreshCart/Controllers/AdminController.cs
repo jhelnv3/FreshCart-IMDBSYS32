@@ -60,6 +60,10 @@ namespace FreshCart.Web.Controllers
             try
             {
                 var products = _productService.GetAllProducts();
+
+                // Only show active products
+                products = products.Where(p => p.IsActive).ToList();
+
                 if (!string.IsNullOrEmpty(search))
                 {
                     products = products.Where(p => p.Name.Contains(search) ||
