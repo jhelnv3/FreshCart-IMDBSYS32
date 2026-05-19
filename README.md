@@ -14,5 +14,5 @@ UNIQUE FEATURES (According to this project's instructions)
 5. Admin and Staff Dashboard with Summary
 6. Shopping Cart with Database Persistence
 7. Forgot Password Flow (Simulated Email Verification)
-8. Admin CRUD Operations (Staff features + User management (create, edit, deactivate, reactivate))
+8. Admin Operations (Staff operations + User management (create, edit, deactivate, reactivate))
 9. Purchase History & Order Tracking
